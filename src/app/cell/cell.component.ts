@@ -17,12 +17,46 @@ export class CellComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  changeState(i: number) {
+    if (i <= 4 && i >= 0 && i % 1 === 0) {
+      this.state = i;
+    }
+  }
+
   changeStateToNothing() {
     this.state = State.NOTHING;
   }
 
   changeStateToWall() {
     this.state = State.WALL;
+  }
+
+  changeStateToStartingPos() {
+    this.state = State.STARTING_POS;
+  }
+
+  changeStateToEndingPos() {
+    this.state = State.ENDING_POS;
+  }
+
+  changeStateToDiscovered() {
+    this.state = State.DISCOVERED;
+  }
+
+  checkIfNothingOrEnding() {
+    return this.checkIfNothing() || this.checkIfEndingPos();
+  }
+
+  checkIfNothing() {
+    return this.state === 0;
+  }
+
+  checkIfEndingPos() {
+    return this.state === 3;
+  }
+
+  checkIfDiscovered() {
+    return this.state === 4;
   }
 
   getState() {

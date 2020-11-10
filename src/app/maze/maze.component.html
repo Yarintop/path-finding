@@ -1,19 +1,33 @@
-<table>
-    <tr *ngFor="let row of maze">
-        <ng-container *ngFor="let cell of row">
+<table class="center">
+    <tr *ngFor="let row of maze; let i = index">
+        <ng-container *ngFor="let cell of row; let j = index">
             <ng-container [ngSwitch]="cell.getState()">
                 <td *ngSwitchCase="0">
-                    <!-- NOTHING -->
-                    <button mat-raised-button></button>
+                    <!-- Nothing -->
+                    <button mat-raised-button id="{{ i + ',' + j }}" (click)="changeCellState(i, j, 1)"></button>
                 </td>
                 <td *ngSwitchCase="1">
-                    <!-- WALL -->
-                    <button mat-raised-button color="primary"></button>
+                    <!-- Wall -->
+                    <button mat-raised-button id="{{i + ',' + j}}"  (click)="changeCellState(i, j, 0)" color="primary"></button>
+                </td>
+                <td *ngSwitchCase="2">
+                    <!-- Starting Position -->
+                    <button mat-raised-button id="{{i + ',' + j}}" color="warn">Start</button>
+                </td>
+                <td *ngSwitchCase="3">
+                    <!-- Ending Position -->
+                    <button mat-raised-button id="{{i + ',' + j}}" color="warn">End</button>
+                </td>
+                <td *ngSwitchCase="4">
+                    <!-- Discovered -->
+                    <button mat-raised-button id="{{i + ',' + j}}" color="accent"></button>
                 </td>
                 <td *ngSwitchDefault>
-                    E
+                    <!--Default-->
                 </td>
             </ng-container>
         </ng-container>
     </tr>
 </table>
+
+<button (click)="BFS()"></button>
