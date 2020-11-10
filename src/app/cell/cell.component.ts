@@ -1,3 +1,4 @@
+import { State } from './state-enum';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,12 +7,25 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./cell.component.scss']
 })
 export class CellComponent implements OnInit {
+  StateEnum = State;
+  state: Number;
 
-  state: Number = 0; // 
-
-  constructor() { }
+  constructor() { 
+     this.state = State.NOTHING;
+  }
 
   ngOnInit(): void {
   }
 
+  changeStateToNothing() {
+    this.state = State.NOTHING;
+  }
+
+  changeStateToWall() {
+    this.state = State.WALL;
+  }
+
+  getState() {
+    return this.state;
+  }
 }

@@ -1,1 +1,19 @@
-<p>maze works!</p>
+<table>
+    <tr *ngFor="let row of maze">
+        <ng-container *ngFor="let cell of row">
+            <ng-container [ngSwitch]="cell.getState()">
+                <td *ngSwitchCase="0">
+                    <!-- NOTHING -->
+                    <button mat-raised-button></button>
+                </td>
+                <td *ngSwitchCase="1">
+                    <!-- WALL -->
+                    <button mat-raised-button color="primary"></button>
+                </td>
+                <td *ngSwitchDefault>
+                    E
+                </td>
+            </ng-container>
+        </ng-container>
+    </tr>
+</table>
