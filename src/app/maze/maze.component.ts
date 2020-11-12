@@ -1,10 +1,37 @@
 import { CellComponent } from './../cell/cell.component';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { state, style, trigger, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-maze',
   templateUrl: './maze.component.html',
-  styleUrls: ['./maze.component.scss']
+  styleUrls: ['./maze.component.scss'],
+  animations: [
+    trigger('changeColor', [
+      state('0', style({                    //Nothing
+        backgroundColor: ""
+      })),
+      state('1', style({                    //Wall
+        backgroundColor: "Purple"
+      })),
+      state('2', style({                    //Starting Position
+        backgroundColor: "Red"
+      })),
+      state('3', style({                    //Ending Position
+        backgroundColor: "Red"
+      })),
+      state('4', style({                    //Discovered
+        backgroundColor: "Orange"
+      })),
+      transition(':enter, * => 2, * => 3', [
+        animate('.1s')
+      ]),
+      transition('* => *', animate('.2s {{delayLayer}}ms ease'), { params: { delayLayer: 0 }}),
+      // transition('* => *', [
+      //   animate('.5s')
+      // ]),
+    ]),
+  ],
 })
 export class MazeComponent implements OnInit {
 
@@ -16,7 +43,7 @@ export class MazeComponent implements OnInit {
   startingPos: [number, number] = [Math.floor(this.height / 2), Math.floor(this.width / 3)];
   endingPos: [number, number] = [Math.floor(this.height / 2), Math.floor(this.width * 2 / 3)];
 
-  constructor() {
+  constructor(private cdr: ChangeDetectorRef) {
     this.maze = [];
     for (let i = 0; i < this.height; i++) {
       this.maze[i] = [];
@@ -31,31 +58,50 @@ export class MazeComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  changeCellState(height: number, width: number, toWall) {
-    if (toWall) {
+  changeCellState(height: number, width: number) {
+    if (!this.maze[height][width].checkIfWall()) {
       this.maze[height][width].changeStateToWall();
     } else {
       this.maze[height][width].changeStateToNothing();
     }
   }
 
-  getAllNothingAdjacentCells(i: number, j: number) {
+  // changeCellState(height: number, width: number, toWall) {
+  //   if (toWall) {
+  //     this.maze[height][width].changeStateToWall();
+  //   } else {
+  //     this.maze[height][width].changeStateToNothing();
+  //   }
+  // }
+
+  start() {
+    for (let i = 0; i < this.height; i++) {
+      for (let j = 0; j < this.width; j++) {
+        if (this.maze[i][j].checkIfDiscovered()) {
+          this.maze[i][j].changeStateToNothing();
+        }
+      }
+    }
+    this.BFS();
+  }
+
+  getAllNothingAdjacentCells(i: number, j: number, delayLayer: number) {
     var arr = [];
-    if (i > 0 && this.maze[i - 1][j].checkIfNothingOrEnding()) {
+    if (i > 0 && this.maze[i - 1][j].checkFreePath()) {
       arr.push([this.maze[i - 1][j], i - 1, j]);
-      this.maze[i - 1][j].changeStateToDiscovered();
+      this.maze[i - 1][j].setDelayLayer(delayLayer);
     }
-    if (i + 1 < this.height && this.maze[i + 1][j].checkIfNothingOrEnding()) {
+    if (i + 1 < this.height && this.maze[i + 1][j].checkFreePath()) {
       arr.push([this.maze[i + 1][j], i + 1, j]);
-      this.maze[i + 1][j].changeStateToDiscovered();
+      this.maze[i + 1][j].setDelayLayer(delayLayer);
     }
-    if (j > 0 && this.maze[i][j - 1].checkIfNothingOrEnding()) {
+    if (j > 0 && this.maze[i][j - 1].checkFreePath()) {
       arr.push([this.maze[i][j - 1], i, j - 1]);
-      this.maze[i][j - 1].changeStateToDiscovered();
+      this.maze[i][j - 1].setDelayLayer(delayLayer);
     }
-    if (j + 1 < this.width && this.maze[i][j + 1].checkIfNothingOrEnding()) {
+    if (j + 1 < this.width && this.maze[i][j + 1].checkFreePath()) {
       arr.push([this.maze[i][j + 1], i, j + 1]);
-      this.maze[i][j + 1].changeStateToDiscovered();
+      this.maze[i][j + 1].setDelayLayer(delayLayer);
     }
     console.log('arr', arr);
     return arr;
@@ -65,19 +111,16 @@ export class MazeComponent implements OnInit {
     var q = [];
     var v: [CellComponent, number, number];
     q.push([this.maze[this.startingPos[0]][this.startingPos[1]], this.startingPos[0], this.startingPos[1]]);
+    var delayLayer = 0;
     while (q.length) {
-        v = q.shift();
-        console.log(v);
-        if (v[0].checkIfEndingPos()) {
-          return v;
-        } else {
-          let arr = this.getAllNothingAdjacentCells(v[1], v[2]);
-          for (var c of arr) {
-            console.log('c:', c);
-            q.push(c);
-          }
-          console.log('q:', q);
-        }
+      v = q.shift();
+      let arr = this.getAllNothingAdjacentCells(v[1], v[2], delayLayer);
+      for (var c of arr) {
+        if (c[0].checkIfEndingPos())
+          return c;
+        q.push(c);
+      }
+      delayLayer += 5;
     }
   }
 }

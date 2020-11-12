@@ -13,7 +13,7 @@ import { MaterialModule } from './material.module';
     AppComponent,
     MenuComponent,
     MazeComponent,
-    CellComponent
+    CellComponent,
   ],
   imports: [
     BrowserModule,

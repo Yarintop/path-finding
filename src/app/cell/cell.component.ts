@@ -9,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 export class CellComponent implements OnInit {
   StateEnum = State;
   state: Number;
+  color: String = "";
+  text: String = "";
+  delayLayer: number = 0;
 
-  constructor() { 
-     this.state = State.NOTHING;
+  constructor() {
+    this.state = State.NOTHING;
   }
 
   ngOnInit(): void {
@@ -25,30 +28,44 @@ export class CellComponent implements OnInit {
 
   changeStateToNothing() {
     this.state = State.NOTHING;
+    this.color = "";
+    this.text = "";
   }
 
   changeStateToWall() {
     this.state = State.WALL;
+    this.color = "purple";
+    this.text = "";
   }
 
   changeStateToStartingPos() {
     this.state = State.STARTING_POS;
+    this.color = "red";
+    this.text = "Start";
   }
 
   changeStateToEndingPos() {
     this.state = State.ENDING_POS;
+    this.color = "red";
+    this.text = "End";
   }
 
   changeStateToDiscovered() {
     this.state = State.DISCOVERED;
+    this.color = "orange";
+    this.text = "";
   }
 
-  checkIfNothingOrEnding() {
-    return this.checkIfNothing() || this.checkIfEndingPos();
+  checkFreePath() {
+    if (this.state === 0) {
+      this.changeStateToDiscovered();
+      return true;
+    }
+    return this.state === 3;
   }
-
-  checkIfNothing() {
-    return this.state === 0;
+  
+  checkIfWall() {
+    return this.state === 1;
   }
 
   checkIfEndingPos() {
@@ -61,5 +78,21 @@ export class CellComponent implements OnInit {
 
   getState() {
     return this.state;
+  }
+
+  getColor() {
+    return this.color;
+  }
+
+  getText() {
+    return this.text;
+  }
+
+  setDelayLayer(delayLayer: number) {
+    this.delayLayer = delayLayer;
+  }
+
+  getDelayLayer() {
+    return this.delayLayer;
   }
 }
