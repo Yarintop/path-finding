@@ -1,37 +1,37 @@
 <table class="center">
     <tr *ngFor="let row of maze; let i = index">
         <ng-container *ngFor="let cell of row; let j = index">
-            <!-- <ng-container [ngSwitch]="cell.getState()"> -->
-            <ng-container>
-                <td>
+            <ng-container [ngSwitch]="cell.getState()">
+            <!-- <ng-container> -->
+                <!-- <td> -->
                     <!-- Nothing -->
-                    <button mat-raised-button id="{{ i + ',' + j }}" (click)="changeCellState(i, j)" [@changeColor]="{value: cell.getState(), params: {delayLayer: cell.getDelayLayer()}}">
-                        <span class="text">{{ cell.getText() }}</span>
-                    </button>
+                    <!-- <button mat-raised-button id="{{ i + ',' + j }}" (click)="changeCellState(i, j)" [@changeColor]="{value: cell.getState(), params: {delayLayer: cell.getDelayLayer()}}"> -->
+                        <!-- <span class="text">{{ cell.getText() }}</span> -->
+                    <!-- </button> -->
+                <!-- </td> -->
+                <td *ngSwitchCase="0">
+                    <!-- Nothing -->
+                    <button mat-raised-button id="{{ i + ',' + j }}" (click)="changeCellState(i, j)"></button>
                 </td>
-                <!-- <td *ngSwitchCase="0"> -->
-                    <!-- Nothing -->
-                    <!-- <button mat-raised-button id="{{ i + ',' + j }}" (click)="changeCellState(i, j, 1)"></button> -->
-                <!-- </td> -->
-                <!-- <td *ngSwitchCase="1"> -->
+                <td *ngSwitchCase="1">
                     <!-- Wall -->
-                    <!-- <button mat-raised-button id="{{i + ',' + j}}"  (click)="changeCellState(i, j, 0)" color="primary"></button> -->
-                <!-- </td> -->
-                <!-- <td *ngSwitchCase="2"> -->
+                    <button mat-raised-button id="{{i + ',' + j}}"  (click)="changeCellState(i, j)" color="primary"></button>
+                </td>
+                <td *ngSwitchCase="2">
                     <!-- Starting Position -->
-                    <!-- <button mat-raised-button id="{{i + ',' + j}}" color="warn">Start</button> -->
-                <!-- </td> -->
-                <!-- <td *ngSwitchCase="3"> -->
+                    <button mat-raised-button id="{{i + ',' + j}}" color="warn">Start</button>
+                </td>
+                <td *ngSwitchCase="3">
                     <!-- Ending Position -->
-                    <!-- <button mat-raised-button id="{{i + ',' + j}}" color="warn">End</button> -->
-                <!-- </td> -->
-                <!-- <td *ngSwitchCase="4"> -->
+                    <button mat-raised-button id="{{i + ',' + j}}" color="warn">End</button>
+                </td>
+                <td *ngSwitchCase="4">
                     <!-- Discovered -->
-                    <!-- <button mat-raised-button id="{{i + ',' + j}}" color="accent"></button> -->
-                <!-- </td> -->
-                <!-- <td *ngSwitchDefault> -->
-                    <!--Default-->
-                <!-- </td> -->
+                    <button mat-raised-button id="{{i + ',' + j}}" color="accent"></button>
+                </td>
+                <td *ngSwitchDefault>
+                    <!-- Default -->
+                </td>
             </ng-container>
         </ng-container>
     </tr>

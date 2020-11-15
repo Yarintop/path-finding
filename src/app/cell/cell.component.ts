@@ -1,5 +1,5 @@
 import { State } from './state-enum';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-cell',
@@ -11,7 +11,6 @@ export class CellComponent implements OnInit {
   state: Number;
   color: String = "";
   text: String = "";
-  delayLayer: number = 0;
 
   constructor() {
     this.state = State.NOTHING;
@@ -86,13 +85,5 @@ export class CellComponent implements OnInit {
 
   getText() {
     return this.text;
-  }
-
-  setDelayLayer(delayLayer: number) {
-    this.delayLayer = delayLayer;
-  }
-
-  getDelayLayer() {
-    return this.delayLayer;
   }
 }

@@ -26,7 +26,7 @@ import { state, style, trigger, animate, transition } from '@angular/animations'
       transition(':enter, * => 2, * => 3', [
         animate('.1s')
       ]),
-      transition('* => *', animate('.2s {{delayLayer}}ms ease'), { params: { delayLayer: 0 }}),
+      transition('* => *', animate('.2s {{delayLayer}}ms ease'), { params: { delayLayer: 0 } }),
       // transition('* => *', [
       //   animate('.5s')
       // ]),
@@ -85,42 +85,40 @@ export class MazeComponent implements OnInit {
     this.BFS();
   }
 
-  getAllNothingAdjacentCells(i: number, j: number, delayLayer: number) {
+  getAllNothingAdjacentCells(i: number, j: number) {
     var arr = [];
     if (i > 0 && this.maze[i - 1][j].checkFreePath()) {
       arr.push([this.maze[i - 1][j], i - 1, j]);
-      this.maze[i - 1][j].setDelayLayer(delayLayer);
     }
     if (i + 1 < this.height && this.maze[i + 1][j].checkFreePath()) {
       arr.push([this.maze[i + 1][j], i + 1, j]);
-      this.maze[i + 1][j].setDelayLayer(delayLayer);
     }
     if (j > 0 && this.maze[i][j - 1].checkFreePath()) {
       arr.push([this.maze[i][j - 1], i, j - 1]);
-      this.maze[i][j - 1].setDelayLayer(delayLayer);
     }
     if (j + 1 < this.width && this.maze[i][j + 1].checkFreePath()) {
       arr.push([this.maze[i][j + 1], i, j + 1]);
-      this.maze[i][j + 1].setDelayLayer(delayLayer);
     }
-    console.log('arr', arr);
     return arr;
   }
 
   BFS() {
     var q = [];
     var v: [CellComponent, number, number];
+    var lastV;
     q.push([this.maze[this.startingPos[0]][this.startingPos[1]], this.startingPos[0], this.startingPos[1]]);
-    var delayLayer = 0;
-    while (q.length) {
-      v = q.shift();
-      let arr = this.getAllNothingAdjacentCells(v[1], v[2], delayLayer);
-      for (var c of arr) {
-        if (c[0].checkIfEndingPos())
-          return c;
-        q.push(c);
+    var intervalId = setInterval(() => {
+      lastV = q[q.length - 1];
+      while (q.includes(lastV)) {
+        v = q.shift();
+        let arr = this.getAllNothingAdjacentCells(v[1], v[2]);
+        for (var c of arr) {
+          if (c[0].checkIfEndingPos()){
+            clearInterval(intervalId);
+          }
+          q.push(c);
+        }
       }
-      delayLayer += 5;
-    }
+    }, 1);
   }
 }
